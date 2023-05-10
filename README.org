@@ -4,3 +4,5 @@
 * =max-rnbo-cljs=
 
 This is a starter project for Cycling '74's [RNBO](https://cycling74.com/products/rnbo) for Max using ClojureScript and [Figwheel Main](https://figwheel.org/) instead of raw Javascript. We've rewritten the boilerplate JS, replaced async with Clojure channels, and so on.
+
+The Figwheel project is in =net.cassiel.max-rnbo=. In that directory, use [Leiningen](https://leiningen.org/) and =lein fig:build= to launch a development environment and browser page - or, use your favourite editor with Clojure support.

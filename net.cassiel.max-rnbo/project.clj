@@ -24,6 +24,7 @@
             "fig:test"  ["run" "-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "net.test-runner"]}
 
   :profiles {:dev {:dependencies [[com.bhauman/figwheel-main "0.2.18"]
+                                  [org.slf4j/slf4j-nop "2.0.7"]
                                   [com.bhauman/rebel-readline-cljs "0.1.4"]]
 
                    :resource-paths ["target"]
