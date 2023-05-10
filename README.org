@@ -1,0 +1,6 @@
+-*- mode: org; mode: visual-line; -*-
+#+STARTUP: indent
+
+* =max-rnbo-cljs=
+
+This is a starter project for Cycling '74's [RNBO](https://cycling74.com/products/rnbo) for Max using ClojureScript and [Figwheel Main](https://figwheel.org/) instead of raw Javascript. We've rewritten the boilerplate JS, replaced async with Clojure channels, and so on.
