@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 227.0, 220.0, 659.0, 467.0 ],
+		"rect" : [ 216.0, -1078.0, 659.0, 467.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -71,12 +71,12 @@
 						}
 ,
 						"classnamespace" : "rnbo",
-						"rect" : [ 556.0, 363.0, 637.0, 480.0 ],
+						"rect" : [ 146.0, -891.0, 637.0, 480.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
 						"default_fontface" : 0,
-						"default_fontname" : "InputMono",
+						"default_fontname" : "Lato",
 						"gridonopen" : 2,
 						"gridsize" : [ 15.0, 5.0 ],
 						"gridsnaponopen" : 2,
@@ -99,7 +99,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
-						"title" : "being-audio",
+						"title" : "rnbo-main",
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontface" : 0,
@@ -115,7 +115,7 @@
 										"comment" : ""
 									}
 ,
-									"rnbo_serial" : 2,
+									"rnbo_serial" : 1,
 									"rnbo_uniqueid" : "out~_obj-2",
 									"rnboinfo" : 									{
 										"needsInstanceInfo" : 1,
@@ -215,7 +215,7 @@
 										"comment" : ""
 									}
 ,
-									"rnbo_serial" : 1,
+									"rnbo_serial" : 2,
 									"rnbo_uniqueid" : "out~_obj-1",
 									"rnboinfo" : 									{
 										"needsInstanceInfo" : 1,
@@ -328,7 +328,7 @@
 						"bgfillcolor_autogradient" : 0.0
 					}
 ,
-					"patching_rect" : [ 210.0, 225.0, 192.0, 23.0 ],
+					"patching_rect" : [ 210.0, 225.0, 176.0, 23.0 ],
 					"rnboattrcache" : 					{
 
 					}
@@ -360,7 +360,7 @@
 						"subtype" : "Undefined",
 						"embed" : 1,
 						"snapshot" : 						{
-							"__presetid" : "being-audio"
+							"__presetid" : "rnbo-main"
 						}
 ,
 						"snapshotlist" : 						{
@@ -369,21 +369,21 @@
 									"filetype" : "C74Snapshot",
 									"version" : 2,
 									"minorversion" : 0,
-									"name" : "being-audio",
-									"origin" : "being-audio",
+									"name" : "rnbo-main",
+									"origin" : "rnbo-main",
 									"type" : "rnbo",
 									"subtype" : "",
-									"embed" : 0,
+									"embed" : 1,
 									"snapshot" : 									{
-										"__presetid" : "being-audio"
+										"__presetid" : "rnbo-main"
 									}
 ,
 									"fileref" : 									{
-										"name" : "being-audio",
-										"filename" : "being-audio.maxsnap",
-										"filepath" : "~/GITHUB/beinghumanltd/being-artwork/max-audio/Being/data",
+										"name" : "rnbo-main",
+										"filename" : "rnbo-main.maxsnap",
+										"filepath" : "~/GITHUB/cassiel/max-rnbo-cljs/max-audio/MaxProject/data",
 										"filepos" : -1,
-										"snapshotfileid" : "db7d70c71f3d1378194f30272fb8f19a"
+										"snapshotfileid" : "0f78424cf8256ad5d31f5a5e25dc4f80"
 									}
 
 								}
@@ -393,7 +393,7 @@
 					}
 ,
 					"style" : "cassiel.rnbo-object",
-					"text" : "rnbo~ @title being-audio",
+					"text" : "rnbo~ @title rnbo-main",
 					"varname" : "rnbo~"
 				}
 
@@ -415,8 +415,8 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "being-audio.maxsnap",
-				"bootpath" : "~/GITHUB/beinghumanltd/being-artwork/max-audio/Being/data",
+				"name" : "rnbo-main.maxsnap",
+				"bootpath" : "~/GITHUB/cassiel/max-rnbo-cljs/max-audio/MaxProject/data",
 				"patcherrelativepath" : "../data",
 				"type" : "mx@s",
 				"implicit" : 1
