@@ -43,8 +43,8 @@
                                (map :audio X)
                                (remove nil? X)
                                (filter (partial re-matches #"(?i).+\.wav") X)
-                               ;; Make sure we have exactly 10, by repeating (assuming we have at least one) -
-                               ;; but also randomize so we don't get the same first 10
+                               ;; Make sure we have exactly 10, by cycling (assuming we have at least one) -
+                               ;; but also randomize so we don't get the same first 10.
                                (shuffle X)
                                (take 10 (cycle X))
                                (map (partial str "https://time.apdev.uk/uploads/") X))
@@ -54,6 +54,9 @@
                                                 (<p! (.arrayBuffer X))
                                                 (<p! (.decodeAudioData context X)))))
                                   urls)]
+                   ;; TODO: should we be closing those channels as they deliver their results?
+                   ;; If not, our go-loop block in the main body of the code will just park.
+                   ;; TODO: is there a bogus level of channel indirection here?
                    (go (>! ch (a/merge chans)))))))
     ch))
 
@@ -75,16 +78,19 @@
                                            (.-webkitAudioContext js/window))
                              context   (WAContext.)]
                          (go
-                           (let [response      (<p! (js/fetch "export/rnbo-main.export.json"))
-                                 patcher       (<p! (.json response))
-                                 version       (-> patcher .-desc.meta.rnboversion)
-                                 _             (<p! (load-RNBO-script version))
-                                 output-node   (.createGain context)
+                           (let [response    (<p! (js/fetch "export/rnbo-main.export.json"))
+                                 patcher     (<p! (.json response))
+                                 version     (-> patcher .-desc.meta.rnboversion)
+                                 _           (<p! (load-RNBO-script version))
+                                 output-node (.createGain context)
                                  ;;deps        (<p! (js/fetch "export/dependencies.json"))
-                                 _             (js/console.log "window.RNBO" (.-RNBO js/window))
-                                 device        (<p! (.createDevice (.-RNBO js/window)
-                                                                   #js {:context context :patcher patcher}))
+                                 _           (js/console.log "window.RNBO" (.-RNBO js/window))
+                                 device      (<p! (.createDevice (.-RNBO js/window)
+                                                                 #js {:context context :patcher patcher}))
                                  merged-chan (<! (fetch-audio-buffers-ch context))
+                                 ;; We fetch audio files from a remote source (specified in JSON):
+                                 ;; as they arrive asynchronously, we associate them with buffers
+                                 ;; that need to be referenced in the RNBO patcher: MAIN_0, MAIN_1 etc.
                                  _           (go-loop [dbuf (<! merged-chan)
                                                        idx 0]
                                                (when dbuf
@@ -99,8 +105,8 @@
                                  (.subscribe (fn [ev] (js/console.log (.-tag ev)))))
 
                              (doseq [x (oget device :dataBufferDescriptions)]
-                               (js/console.log "BUFFER" x))
-                             ))
+                               (js/console.log "BUFFER" x))))
+
                          (assoc this
                                 :_context context
                                 :installed? true))))

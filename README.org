@@ -3,8 +3,20 @@
 
 * =max-rnbo-cljs=
 
+** Introduction
+
 This is a starter project for Cycling '74's [[https://cycling74.com/products/rnbo][RNBO]] for Max using ClojureScript and [[https://figwheel.org/][Figwheel Main]] instead of raw Javascript. We've rewritten the boilerplate JS, replaced async with Clojure channels, and so on.
 
 The Figwheel project is in =net.cassiel.max-rnbo=. In that directory, use [[https://leiningen.org/][Leiningen]] and =lein fig:build= to launch a development environment and browser page - or, use your favourite editor with Clojure support.
 
 Max RNBO export: target =resources/public/export=. The boilerplate code in =rnbo_device.cljs= fetches from here.
+
+We are making extensive use of Clojure's [[https://github.com/clojure/core.async][core.async]] in place of callbacks; this also deals with JS promises.
+
+** Audio Buffers
+
+We are loading demo audio buffers in two ways:
+
+- Audio file specified in the RNBO patcher, via a =~buffer= object. On export, this dependency gets pushed into a =dependencies.json= file, and the audio file itself is copied across. The boilerplate RNBO wrapper (=rnbo_device.cljs=) reads this and loads the audip. This is a pretty much a direct port of the original Javascript version.
+
+- Audio files located and loaded dynamically. In this scenario we have a collection of =groove~= objects in the RNBO patcher but no actual buffers. The audio file set is identified via a JSON file (which could be a remote endpoint), and as the files are fetched asynchronously they are established as data buffers. The buffer naming in the patcher needs to match the names generated in the boilerplate as the files come in.

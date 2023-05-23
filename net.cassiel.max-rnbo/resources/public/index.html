@@ -5,11 +5,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="css/style.css" rel="stylesheet" type="text/css">
         <link rel="icon" href="https://clojurescript.org/images/cljs-logo-icon-32.png">
+
+        <!-- Libraries: -->
+        <script src="jslib/jquery-3.6.3.min.js" type="text/javascript"></script>
+
+        <!-- ClojureScript output: -->
+        <script src="cljs-out/dev-main.js" type="text/javascript"></script>
+
+        <script>
+         $(net.cassiel.max_rnbo.core.startup)
+        </script>
     </head>
     <body>
-        <div id="app">
-        </div> <!-- end of app div -->
-
-        <script src="cljs-out/dev-main.js" type="text/javascript"></script>
+        <div id="main" />
     </body>
 </html>

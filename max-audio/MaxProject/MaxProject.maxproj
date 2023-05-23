@@ -2,8 +2,8 @@
 	"name" : "MaxProject",
 	"version" : 1,
 	"creationdate" : 3767097371,
-	"modificationdate" : 3767617109,
-	"viewrect" : [ 45.0, -951.0, 300.0, 500.0 ],
+	"modificationdate" : 3767631499,
+	"viewrect" : [ 1362.0, -644.0, 300.0, 500.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
 	"showdependencies" : 1,
@@ -15,6 +15,10 @@
 				"local" : 1,
 				"toplevel" : 1
 			}
+
+		}
+,
+		"media" : 		{
 
 		}
 ,
