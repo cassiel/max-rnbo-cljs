@@ -27,15 +27,16 @@
          (js/console.log "BODY" (.-body js/document))
          (.append (.-body js/document) el))))))
 
-;; From a server response ("user_data") asynchronously fetch all audio assets. Return a
+;; From a server response asynchronously fetch all audio assets. Return a
 ;; channel which delivers the audio data buffers as a single sequence.
+;; Based on an earlier effort which fetches from Amazon EC2, hence some of
+;; the filters and tests.
 
 (defn fetch-audio-buffers-ch [context]
   (let [ch (a/chan)]
     (-> js/$
-        (.post "https://time.apdev.uk/user_data"
-               #js {:authToken "ktztMDY4lUrdzuqf"}
-               (fn [response]
+        (.get "/data.json"
+              (fn [response]
                  (let [urls  (as-> response X
                                (js->clj X :keywordize-keys true)
                                (:data X)
@@ -47,7 +48,7 @@
                                ;; but also randomize so we don't get the same first 10.
                                (shuffle X)
                                (take 10 (cycle X))
-                               (map (partial str "https://time.apdev.uk/uploads/") X))
+                               (map (partial str "/export/media/") X))
                        chans (map (fn [url] (go
                                               (as-> (js/fetch url) X
                                                 (<p! X)
@@ -96,7 +97,16 @@
                                                (when dbuf
                                                  (js/console.log "BUF" dbuf)
                                                  (.setDataBuffer device (str "MAIN_" idx) dbuf)
-                                                 (recur (<! merged-chan) (inc idx))))]
+                                                 (recur (<! merged-chan) (inc idx))))
+
+                                 ;; dependencies.json contains entries for buffer~ objects in the RNBO patcher
+                                 ;; itself which are associated with files or urls. The file paths are probably
+                                 ;; wrong (i.e. not qualified with full paths).
+                                 deps (<p! (js/fetch "/export/dependencies.json"))
+                                 deps (<p! (.json deps))
+                                 _    (js/console.log "DEPENDENCIES" deps)
+                                 ]
+
                              (.connect output-node (.-destination context))
                              (.connect (.-node device) output-node)
 
@@ -104,6 +114,9 @@
                              (-> (oget device :messageEvent)
                                  (.subscribe (fn [ev] (js/console.log (.-tag ev)))))
 
+                             ;; Note: the dataBufferDescriptions includes the explicit buffer~
+                             ;; instances (with file: field), even though (at this implementation stage)
+                             ;; we've not loaded the audio. So, why do we need the dependencies.json file?
                              (doseq [x (oget device :dataBufferDescriptions)]
                                (js/console.log "BUFFER" x))))
 
