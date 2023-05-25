@@ -1,5 +1,13 @@
 [
   {
+    "id": "BAZ",
+    "url": "http://localhost:9500/export/media/HAWK2.wav"
+  },
+  {
+    "id": "BAR",
+    "file": "media/anton.aif"
+  },
+  {
     "id": "FOO",
     "file": "media/HAWK.wav"
   }

@@ -2,6 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer [go go-loop alt!]])
   (:require [com.stuartsierra.component :as component]
             [cljs.core.async :as a :refer [>! <!]]
+            [clojure.core.match :refer [match]]
             [cljs.core.async.interop :refer-macros [<p!]]
             [oops.core :refer [oset! oget]]
             [goog.string :as gstring]
@@ -31,3 +32,21 @@
 (.-webkitAudioContext js/window)
 
 (oget js/window :?webkitAudioContext)
+
+(sort-by :X [{:X "B"} {:X "A"} {:X "Z"}])
+
+(match [{:id "BAR", :file "anton.aif", :type "Float32Buffer", :tag "buffer~"}]
+       [{:file f}] f
+       :else "ELSE")
+
+(match ["AAA"]
+       [(#"AAA" :as x)] x
+       :else 0)
+
+(match ["AAABBB"]
+       [(x :guard (partial re-matches #"AAA.*"))] x
+       :else 0)
+
+(type "X")
+
+(js/console.log (type #(identity "X")))

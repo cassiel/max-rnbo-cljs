@@ -9,6 +9,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/clojurescript "1.11.60"]
                  [org.clojure/core.async "1.6.673"]
+                 [org.clojure/core.match "1.0.1"]
                  [reagent "1.2.0"]
                  [cljsjs/react "17.0.2-0"]
                  [cljsjs/react-dom "17.0.2-0"]

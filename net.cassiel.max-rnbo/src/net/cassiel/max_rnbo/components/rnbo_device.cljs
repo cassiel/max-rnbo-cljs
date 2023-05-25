@@ -1,9 +1,10 @@
 (ns net.cassiel.max-rnbo.components.rnbo-device
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]
-            [oops.core :refer [oset! oget]]
+            [oops.core :refer [oset! oget ocall]]
             [clojure.core.async :as a :refer [>! <! go go-loop]]
-            [cljs.core.async.interop :refer-macros [<p!]]))
+            [cljs.core.async.interop :refer-macros [<p!]]
+            [clojure.core.match :refer [match]]))
 
 ;; Actual side-effect here is a binding of a field RNBO into js/window.
 ;; A second side-effect seems to be the non-idempotent addition of the <script>.
@@ -28,11 +29,11 @@
          (.append (.-body js/document) el))))))
 
 ;; From a server response asynchronously fetch all audio assets. Return a
-;; channel which delivers the audio data buffers as a single sequence.
+;; channel which delivers the HTML audio data buffers as a single sequence.
 ;; Based on an earlier effort which fetches from Amazon EC2, hence some of
 ;; the filters and tests.
 
-(defn fetch-audio-buffers-ch [context]
+(defn fetch-audio-assets-ch [context]
   (let [ch (a/chan)]
     (-> js/$
         (.get "/data.json"
@@ -61,6 +62,34 @@
                    (go (>! ch (a/merge chans)))))))
     ch))
 
+;; Load all buffers presented by `device.dataBufferDescriptions`. These are either `buffer~` instances, or
+;; "implied" buffers named in `groove~` etc. but not actually provided
+;; in the RNBO patcher. We respect `@file` and `@url` attributes; where both are absent we load up from
+;; our previously loaded data set (coming in asynchronously via `ch`).
+
+(defn load-buffers [device ch]
+  (go-loop [bufs (-> (oget device :dataBufferDescriptions)
+                     (js->clj :keywordize-keys true)
+                     (as-> X (sort-by :id X)))]
+    (when-let [b (first bufs)]
+      (js/console.log "b" b)
+      (when-let [f (:file b)] (js/console.log "FILE TYPE" (type f)))
+      (match [b]
+             [{:file (u :guard #(re-matches #"https?:/.*" (str %)))}]
+             ;; TODO that (str %) coercion is needed for some reason.
+             (js/console.log "Buffer" (:id b) "with URL-like file" u)
+
+             [{:file f}]
+             (js/console.log "Buffer" (:id b) "with file" f)
+
+             [{:url u}]
+             (js/console.log "Buffer" (:id b) "with URL" u)
+
+             :else
+             (js/console.log "Empty buffer for " (:id b)))
+
+      (recur (next bufs)))))
+
 (defprotocol START-AUDIO
   (start-audio [this] "Start up audio"))
 
@@ -88,37 +117,36 @@
                                  _           (js/console.log "window.RNBO" (.-RNBO js/window))
                                  device      (<p! (.createDevice (.-RNBO js/window)
                                                                  #js {:context context :patcher patcher}))
-                                 merged-chan (<! (fetch-audio-buffers-ch context))
+                                 merged-chan (<! (fetch-audio-assets-ch context))
                                  ;; We fetch audio files from a remote source (specified in JSON):
                                  ;; as they arrive asynchronously, we associate them with buffers
                                  ;; that need to be referenced in the RNBO patcher: MAIN_0, MAIN_1 etc.
-                                 _           (go-loop [dbuf (<! merged-chan)
+                                 #_ _           #_ (go-loop [dbuf (<! merged-chan)
                                                        idx 0]
                                                (when dbuf
                                                  (js/console.log "BUF" dbuf)
                                                  (.setDataBuffer device (str "MAIN_" idx) dbuf)
                                                  (recur (<! merged-chan) (inc idx))))
-
                                  ;; dependencies.json contains entries for buffer~ objects in the RNBO patcher
-                                 ;; itself which are associated with files or urls. The file paths are probably
-                                 ;; wrong (i.e. not qualified with full paths).
+                                 ;; itself which are associated with files or urls. The file paths seem to
+                                 ;; just be "media/xxx" which is where they get planted by the export. Given the
+                                 ;; information we can get from .dataBufferDescriptions it's not clear what we
+                                 ;; get that's different from reading the JSON.
                                  deps (<p! (js/fetch "/export/dependencies.json"))
                                  deps (<p! (.json deps))
                                  _    (js/console.log "DEPENDENCIES" deps)
+
+                                 ;; Let's do a fetch via .dataBufferDescriptions instead.
                                  ]
+
+                             (load-buffers device merged-chan)
 
                              (.connect output-node (.-destination context))
                              (.connect (.-node device) output-node)
 
                              ;; Debugging:
                              (-> (oget device :messageEvent)
-                                 (.subscribe (fn [ev] (js/console.log (.-tag ev)))))
-
-                             ;; Note: the dataBufferDescriptions includes the explicit buffer~
-                             ;; instances (with file: field), even though (at this implementation stage)
-                             ;; we've not loaded the audio. So, why do we need the dependencies.json file?
-                             (doseq [x (oget device :dataBufferDescriptions)]
-                               (js/console.log "BUFFER" x))))
+                                 (.subscribe (fn [ev] (js/console.log (.-tag ev)))))))
 
                          (assoc this
                                 :_context context
