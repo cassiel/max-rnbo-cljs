@@ -10,5 +10,9 @@
   {
     "id": "FOO",
     "file": "media/HAWK.wav"
+  },
+  {
+    "id": "XXX",
+    "file": "media/HAWK3.wav"
   }
 ]
