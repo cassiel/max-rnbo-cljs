@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ -72.0, -1247.0, 659.0, 467.0 ],
+		"rect" : [ -91.0, -632.0, 659.0, 467.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -77,7 +77,7 @@
 						}
 ,
 						"classnamespace" : "rnbo",
-						"rect" : [ 545.0, -1069.0, 949.0, 907.0 ],
+						"rect" : [ -195.0, -1258.0, 823.0, 907.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -108,20 +108,21 @@
 						"title" : "rnbo-main",
 						"boxes" : [ 							{
 								"box" : 								{
+									"fontname" : "InputMono",
 									"id" : "obj-31",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "" ],
-									"patching_rect" : [ 195.0, 725.0, 238.0, 23.0 ],
+									"patching_rect" : [ 195.0, 725.0, 215.0, 23.0 ],
 									"rnbo_classname" : "buffer~",
 									"rnbo_extra_attributes" : 									{
 										"type" : "",
-										"fill" : "",
-										"samplerate" : 0.0
+										"samplerate" : 0.0,
+										"fill" : ""
 									}
 ,
-									"rnbo_serial" : 13,
+									"rnbo_serial" : 5,
 									"rnbo_uniqueid" : "buffer~_obj-31",
 									"rnboinfo" : 									{
 										"needsInstanceInfo" : 1,
@@ -402,7 +403,7 @@
 										"changesPatcherIO" : 0
 									}
 ,
-									"text" : "buffer~ XXX @file XXXX3333.wav"
+									"text" : "buffer~ XXX @file HAWK3.wav"
 								}
 
 							}
@@ -417,13 +418,13 @@
 									"patching_rect" : [ 90.0, 475.0, 474.0, 23.0 ],
 									"rnbo_classname" : "buffer~",
 									"rnbo_extra_attributes" : 									{
-										"file" : "",
 										"type" : "",
-										"fill" : "",
-										"samplerate" : 0.0
+										"samplerate" : 0.0,
+										"file" : "",
+										"fill" : ""
 									}
 ,
-									"rnbo_serial" : 6,
+									"rnbo_serial" : 2,
 									"rnbo_uniqueid" : "buffer~_obj-20",
 									"rnboinfo" : 									{
 										"needsInstanceInfo" : 1,
@@ -710,17 +711,18 @@
 							}
 , 							{
 								"box" : 								{
+									"fontname" : "InputMono",
 									"id" : "obj-16",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "" ],
-									"patching_rect" : [ 90.0, 445.0, 215.0, 23.0 ],
+									"patching_rect" : [ 90.0, 445.0, 303.0, 23.0 ],
 									"rnbo_classname" : "buffer~",
 									"rnbo_extra_attributes" : 									{
 										"type" : "",
-										"fill" : "",
-										"samplerate" : 0.0
+										"samplerate" : 0.0,
+										"fill" : ""
 									}
 ,
 									"rnbo_serial" : 3,
@@ -1057,8 +1059,8 @@
 									"patching_rect" : [ 525.0, 580.0, 307.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
-										"synctype" : "relative",
-										"syncmode" : "phase"
+										"syncmode" : "phase",
+										"synctype" : "relative"
 									}
 ,
 									"rnbo_serial" : 1,
@@ -1424,8 +1426,8 @@
 									"patching_rect" : [ 585.0, 280.0, 24.0, 24.0 ],
 									"rnbo_classname" : "toggle",
 									"rnbo_extra_attributes" : 									{
-										"preset" : 0,
-										"order" : ""
+										"order" : "",
+										"preset" : 0
 									}
 ,
 									"rnbo_serial" : 1,
@@ -1528,9 +1530,9 @@
 									"patching_rect" : [ 285.0, 285.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 2,
@@ -1758,9 +1760,9 @@
 									"patching_rect" : [ 90.0, 285.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 3,
@@ -1988,9 +1990,9 @@
 									"patching_rect" : [ 285.0, 255.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 4,
@@ -2218,9 +2220,9 @@
 									"patching_rect" : [ 90.0, 255.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 5,
@@ -2448,9 +2450,9 @@
 									"patching_rect" : [ 285.0, 225.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 6,
@@ -2678,9 +2680,9 @@
 									"patching_rect" : [ 90.0, 225.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 7,
@@ -2908,9 +2910,9 @@
 									"patching_rect" : [ 285.0, 195.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 8,
@@ -3138,9 +3140,9 @@
 									"patching_rect" : [ 90.0, 195.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 9,
@@ -3368,11 +3370,11 @@
 									"rnbo_classname" : "buffer~",
 									"rnbo_extra_attributes" : 									{
 										"type" : "",
-										"fill" : "",
-										"samplerate" : 0.0
+										"samplerate" : 0.0,
+										"fill" : ""
 									}
 ,
-									"rnbo_serial" : 1,
+									"rnbo_serial" : 4,
 									"rnbo_uniqueid" : "buffer~_obj-6",
 									"rnboinfo" : 									{
 										"needsInstanceInfo" : 1,
@@ -3669,9 +3671,9 @@
 									"patching_rect" : [ 285.0, 165.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 10,
@@ -3899,9 +3901,9 @@
 									"patching_rect" : [ 90.0, 165.0, 176.0, 23.0 ],
 									"rnbo_classname" : "groove~",
 									"rnbo_extra_attributes" : 									{
+										"syncmode" : "phase",
 										"synctype" : "relative",
-										"channels" : 1.0,
-										"syncmode" : "phase"
+										"channels" : 1.0
 									}
 ,
 									"rnbo_serial" : 11,
@@ -4128,8 +4130,8 @@
 									"patching_rect" : [ 585.0, 645.0, 54.0, 23.0 ],
 									"rnbo_classname" : "out~",
 									"rnbo_extra_attributes" : 									{
-										"comment" : "",
-										"meta" : ""
+										"meta" : "",
+										"comment" : ""
 									}
 ,
 									"rnbo_serial" : 1,
@@ -4228,8 +4230,8 @@
 									"patching_rect" : [ 525.0, 645.0, 54.0, 23.0 ],
 									"rnbo_classname" : "out~",
 									"rnbo_extra_attributes" : 									{
-										"comment" : "",
-										"meta" : ""
+										"meta" : "",
+										"comment" : ""
 									}
 ,
 									"rnbo_serial" : 2,
@@ -4439,7 +4441,7 @@
 						"export_config" : 						{
 							"web-export" : 							{
 								"json-web-export" : 								{
-									"copy_dependencies" : 0,
+									"copy_dependencies" : 1,
 									"classname" : "rnbomatic"
 								}
 
@@ -4504,7 +4506,7 @@
 										"filename" : "rnbo-main.maxsnap",
 										"filepath" : "~/GITHUB/cassiel/max-rnbo-cljs/max-audio/MaxProject/data",
 										"filepos" : -1,
-										"snapshotfileid" : "8cd1c507d3d27fe1f8db6d95e0681fcd"
+										"snapshotfileid" : "0f78424cf8256ad5d31f5a5e25dc4f80"
 									}
 
 								}
@@ -4537,15 +4539,30 @@
 ,
 		"dependency_cache" : [ 			{
 				"name" : "HAWK.wav",
-				"bootpath" : "/Users/nick/Documents/Max 8/Packages/BLOCKS/media",
-				"patcherrelativepath" : "../../../../../../Documents/Max 8/Packages/BLOCKS/media",
+				"bootpath" : "~/GITHUB/cassiel/max-rnbo-cljs/max-audio/MaxProject/media",
+				"patcherrelativepath" : "../media",
+				"type" : "WAVE",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "HAWK3.wav",
+				"bootpath" : "~/GITHUB/cassiel/max-rnbo-cljs/max-audio/MaxProject/media",
+				"patcherrelativepath" : "../media",
 				"type" : "WAVE",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "anton.aif",
-				"bootpath" : "C74:/media/msp",
+				"bootpath" : "~/GITHUB/cassiel/max-rnbo-cljs/max-audio/MaxProject/media",
+				"patcherrelativepath" : "../media",
 				"type" : "AIFF",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "rnbo-main.maxsnap",
+				"bootpath" : "~/GITHUB/cassiel/max-rnbo-cljs/max-audio/MaxProject/data",
+				"patcherrelativepath" : "../data",
+				"type" : "mx@s",
 				"implicit" : 1
 			}
  ],
