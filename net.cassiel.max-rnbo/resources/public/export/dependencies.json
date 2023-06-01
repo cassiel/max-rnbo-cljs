@@ -5,10 +5,10 @@
   },
   {
     "id": "BAR",
-    "file": "../../../../../../../../../Applications/Max.app/Contents/Resources/C74/media/msp/anton.aif"
+    "file": "media/anton.aif"
   },
   {
     "id": "FOO",
-    "file": "../../../../../../../Documents/Max 8/Packages/BLOCKS/media/HAWK.wav"
+    "file": "media/HAWK.wav"
   }
 ]

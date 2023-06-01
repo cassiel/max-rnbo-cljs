@@ -32,6 +32,7 @@
 ;; channel which delivers the HTML audio data buffers as a single sequence.
 ;; Based on an earlier effort which fetches from Amazon EC2, hence some of
 ;; the filters and tests.
+;; DEPRECATED.
 
 (defn fetch-audio-assets-ch [context]
   (let [ch (a/chan)]
@@ -62,28 +63,42 @@
                    (go (>! ch (a/merge chans)))))))
     ch))
 
-;; Load all buffers presented by `device.dataBufferDescriptions`. These are either `buffer~` instances, or
-;; "implied" buffers named in `groove~` etc. but not actually provided
-;; in the RNBO patcher. We respect `@file` and `@url` attributes; where both are absent we load up from
-;; our previously loaded data set (coming in asynchronously via `ch`).
+(defn fetch-url [context device id url]
+  (go (as-> (js/fetch url) X
+        (<p! X)
+        (<p! (ocall X :arrayBuffer))
+        (<p! (ocall context :decodeAudioData X))
+        (ocall device :setDataBuffer id X))))
 
-(defn load-buffers [device ch]
+(defn fetch-file [context device id file]
+  (fetch-url context device id (str "/export/media/" file)))
+
+;; Load all buffers declared in the exported patcher.
+;; For buffers with named (and accessible) files, or URLs, the information will be in
+;; `dependencies.json` - note, the files must have been copied across via
+;; "Copy Sample Dependencies", which means they're reachable from the browser with
+;; a known path (`exports`).
+
+(defn load-buffers [context device]
   (go-loop [bufs (-> (oget device :dataBufferDescriptions)
                      (js->clj :keywordize-keys true)
                      (as-> X (sort-by :id X)))]
     (when-let [b (first bufs)]
-      (js/console.log "b" b)
-      (when-let [f (:file b)] (js/console.log "FILE TYPE" (type f)))
+      (js/console.log "<" b ">")
+
       (match [b]
              [{:file (u :guard #(re-matches #"https?:/.*" (str %)))}]
              ;; TODO that (str %) coercion is needed for some reason.
-             (js/console.log "Buffer" (:id b) "with URL-like file" u)
+             (do (js/console.log "Buffer" (:id b) "with URL-like file" u)
+                 (fetch-url context device (:id b) u))
 
              [{:file f}]
-             (js/console.log "Buffer" (:id b) "with file" f)
+             (do (js/console.log "Buffer" (:id b) "with file" f)
+                 (fetch-file context device (:id b) f))
 
              [{:url u}]
-             (js/console.log "Buffer" (:id b) "with URL" u)
+             (do (js/console.log "Buffer" (:id b) "with URL" u)
+                 (fetch-url context device (:id b) u))
 
              :else
              (js/console.log "Empty buffer for " (:id b)))
@@ -134,12 +149,12 @@
                                  ;; get that's different from reading the JSON.
                                  deps (<p! (js/fetch "/export/dependencies.json"))
                                  deps (<p! (.json deps))
-                                 _    (js/console.log "DEPENDENCIES" deps)
+                                 _    (js/console.log "dependencies.json:" deps)
 
                                  ;; Let's do a fetch via .dataBufferDescriptions instead.
                                  ]
 
-                             (load-buffers device merged-chan)
+                             (load-buffers context device)
 
                              (.connect output-node (.-destination context))
                              (.connect (.-node device) output-node)

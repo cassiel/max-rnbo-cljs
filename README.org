@@ -15,8 +15,6 @@ We are making extensive use of Clojure's [[https://github.com/clojure/core.async
 
 ** Audio Buffers
 
-We are loading demo audio buffers in two ways:
+We are loading demo audio buffers via the property =device.dataBufferDescriptions=: this gives us files or URLs as appropriate, or an entry with no file or URL for something like a =groove~= object with no associated buffer in the RNBO patcher. We could also make use of the =dependencies.json= file to tell us about files and URLs (it has no entries unless one of those exists), but since we can only access audio files if they have been copied across into the exports, in which case we know the paths, this doesn't get us any further information.
 
-- Audio file specified in the RNBO patcher, via a =~buffer= object. On export, this dependency gets pushed into a =dependencies.json= file, and the audio file itself is copied across. The boilerplate RNBO wrapper (=rnbo_device.cljs=) reads this and loads the audip. This is a pretty much a direct port of the original Javascript version.
-
-- Audio files located and loaded dynamically. In this scenario we have a collection of =groove~= objects in the RNBO patcher but no actual buffers. The audio file set is identified via a JSON file (which could be a remote endpoint), and as the files are fetched asynchronously they are established as data buffers. The buffer naming in the patcher needs to match the names generated in the boilerplate as the files come in.
+We assume a JSON endpoint which will map these "empty" buffer instances to URLs for fetching files. At some stage we want these buffers to be truly dynamic, so that we can replace the audio while the patcher is running.
