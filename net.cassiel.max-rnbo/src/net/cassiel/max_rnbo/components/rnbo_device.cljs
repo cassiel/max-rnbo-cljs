@@ -6,6 +6,8 @@
             [cljs.core.async.interop :refer-macros [<p!]]
             [clojure.core.match :refer [match]]))
 
+;; This component is a loose rewrite of https://github.com/Cycling74/rnbo.example.webpage/blob/main/js/app.js
+
 ;; Actual side-effect here is a binding of a field RNBO into js/window.
 ;; A second side-effect seems to be the non-idempotent addition of the <script>.
 ;; TODO remove script and shut down audio processor on (stop).
@@ -63,26 +65,43 @@
                    (go (>! ch (a/merge chans)))))))
     ch))
 
-(defn fetch-url [context device id url]
+(defn fetch-url
+  "Fetch a buffer's audio via its URL (deferred)."
+  [context device id url]
   (go (as-> (js/fetch url) X
         (<p! X)
         (<p! (ocall X :arrayBuffer))
         (<p! (ocall context :decodeAudioData X))
         (ocall device :setDataBuffer id X))))
 
-(defn fetch-file [context device id file]
+(defn fetch-file
+  "Fetch a file by treating it as a URL at known location.
+   TODO: protect against odd characters/spaces in names."
+  [context device id file]
   (fetch-url context device id (str "/export/media/" file)))
 
 ;; Load all buffers declared in the exported patcher.
-;; For buffers with named (and accessible) files, or URLs, the information will be in
-;; `dependencies.json` - note, the files must have been copied across via
-;; "Copy Sample Dependencies", which means they're reachable from the browser with
-;; a known path (`exports`).
+
+;; Current understanding: for buffers with named (and accessible) files, or URLs,
+;; the information will be in `dependencies.json`, with file paths amended
+;; as required relative to patcher (rather, to the JSON file containing the compiled code).
+;; These paths are only useful if "Copy Sample Dependencies" is enabled, in which
+;; case they all degenerate to "media/XXX". (URLs are preserved.)
+
+;; We can also look at device.dataBufferDescriptions which seems to pull information
+;; from buffer instances and their file/URL arguments (if any). This gets us
+;; buffers with no file or URL attached (or buffers outside the RNBO patcher itself,
+;; if we encounter groove~, play~ etc.) but just gives us raw arguments. Also, @url
+;; arguments come in as @file. Nevertheless, if we're copying file dependencies
+;; we know the local file paths, so this seems more useful, although we have to
+;; determine the URL instances the hard way. Maybe longer term it's more accurate
+;; to glean information from both sources in parallel.
 
 (defn load-buffers [context device]
   (go-loop [bufs (-> (oget device :dataBufferDescriptions)
                      (js->clj :keywordize-keys true)
                      (as-> X (sort-by :id X)))]
+    ;; The fetches aren't sequenced here and run in parallel.
     (when-let [b (first bufs)]
       (js/console.log "<" b ">")
 
@@ -101,7 +120,11 @@
                  (fetch-url context device (:id b) u))
 
              :else
-             (js/console.log "Empty buffer for " (:id b)))
+             ;; Buffers that have no file or URL information: plant
+             ;; a fixed file (as a test):
+             (do
+               (js/console.log "Empty buffer for " (:id b))
+               (fetch-file context device (:id b) "CHEERS.wav")))
 
       (recur (next bufs)))))
 
@@ -142,17 +165,22 @@
                                                  (js/console.log "BUF" dbuf)
                                                  (.setDataBuffer device (str "MAIN_" idx) dbuf)
                                                  (recur (<! merged-chan) (inc idx))))
-                                 ;; dependencies.json contains entries for buffer~ objects in the RNBO patcher
-                                 ;; itself which are associated with files or urls. The file paths seem to
-                                 ;; just be "media/xxx" which is where they get planted by the export. Given the
-                                 ;; information we can get from .dataBufferDescriptions it's not clear what we
-                                 ;; get that's different from reading the JSON.
-                                 deps (<p! (js/fetch "/export/dependencies.json"))
-                                 deps (<p! (.json deps))
-                                 _    (js/console.log "dependencies.json:" deps)
 
-                                 ;; Let's do a fetch via .dataBufferDescriptions instead.
                                  ]
+
+                             ;; dependencies.json contains entries for buffer~ objects in the RNBO patcher
+                             ;; itself which are associated with files or urls. The file paths seem to
+                             ;; just be "media/xxx" which is where they get planted by the export (assuming
+                             ;; we copy media files at that point). Given the
+                             ;; information we can get from .dataBufferDescriptions it's not clear what we
+                             ;; get that's different from reading the JSON. But let's at least print it.
+
+                             (-> (js/fetch "/export/dependencies.json")
+                                 (as-> X
+                                     (<p! X)
+                                   (.json X)
+                                   (<p! X)
+                                   (js/console.log "dependencies.json:" X)))
 
                              (load-buffers context device)
 
