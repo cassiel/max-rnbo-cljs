@@ -36,7 +36,7 @@
 ;; the filters and tests.
 ;; DEPRECATED.
 
-(defn fetch-audio-assets-ch [context]
+(defn ^:deprecated fetch-audio-assets-ch [context]
   (let [ch (a/chan)]
     (-> js/$
         (.get "/data.json"
@@ -155,7 +155,7 @@
                                  _           (js/console.log "window.RNBO" (.-RNBO js/window))
                                  device      (<p! (.createDevice (.-RNBO js/window)
                                                                  #js {:context context :patcher patcher}))
-                                 merged-chan (<! (fetch-audio-assets-ch context))
+                                 ;; merged-chan (<! (fetch-audio-assets-ch context))
                                  ;; We fetch audio files from a remote source (specified in JSON):
                                  ;; as they arrive asynchronously, we associate them with buffers
                                  ;; that need to be referenced in the RNBO patcher: MAIN_0, MAIN_1 etc.
@@ -175,12 +175,11 @@
                              ;; information we can get from .dataBufferDescriptions it's not clear what we
                              ;; get that's different from reading the JSON. But let's at least print it.
 
-                             (-> (js/fetch "/export/dependencies.json")
-                                 (as-> X
-                                     (<p! X)
-                                   (.json X)
-                                   (<p! X)
-                                   (js/console.log "dependencies.json:" X)))
+                             (as-> (js/fetch "/export/dependencies.json") X
+                               (<p! X)
+                               (.json X)
+                               (<p! X)
+                               (js/console.log "dependencies.json:" X))
 
                              (load-buffers context device)
 
@@ -189,7 +188,10 @@
 
                              ;; Debugging:
                              (-> (oget device :messageEvent)
-                                 (.subscribe (fn [ev] (js/console.log (.-tag ev)))))))
+                                 (ocall :subscribe (fn [ev] (js/console.log "OBJ" (oget ev :?objectId)
+                                                                            "TAG" (oget ev :?tag)
+                                                                            "PAYLOAD" (oget ev :?payload)
+                                                                            ))))))
 
                          (assoc this
                                 :_context context

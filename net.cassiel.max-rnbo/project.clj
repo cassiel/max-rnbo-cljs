@@ -23,6 +23,10 @@
             [com.github.liquidz/antq "RELEASE"]
             [lein-cljsbuild "1.1.8"]]
 
+  :cljsbuild {:builds [{:source-paths ["src"]
+                        :compiler {:output-to "resources/public/jslib/_COMPILED.js"
+                                   :optimizations :whitespace}}]}
+
   :aliases {"fig:build" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
             "fig:min"   ["run" "-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]
             "fig:test"  ["run" "-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "net.test-runner"]}
@@ -30,7 +34,6 @@
   :profiles {:dev {:dependencies [[com.bhauman/figwheel-main "0.2.18"]
                                   [org.slf4j/slf4j-nop "2.0.7"]
                                   [com.bhauman/rebel-readline-cljs "0.1.4"]]
-
                    :resource-paths ["target"]
                    ;; need to add the compiled assets to the :clean-targets
                    :clean-targets ^{:protect false} ["target"]}})

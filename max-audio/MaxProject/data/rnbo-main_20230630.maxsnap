@@ -1,0 +1,14 @@
+{
+	"filetype" : "C74Snapshot",
+	"version" : 2,
+	"minorversion" : 0,
+	"name" : "rnbo-main",
+	"origin" : "rnbo-main-copy",
+	"type" : "rnbo",
+	"subtype" : "",
+	"embed" : 1,
+	"snapshot" : 	{
+		"__presetid" : "rnbo-main"
+	}
+
+}
